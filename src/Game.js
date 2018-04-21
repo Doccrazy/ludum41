@@ -5,7 +5,7 @@ import './Game.css';
 
 class Game extends React.Component {
   render() {
-    return <div className="gamePre" dangerouslySetInnerHTML={{__html: this.props.renderedGame}} />;
+    return <div dangerouslySetInnerHTML={{__html: this.props.renderedGame}} />;
   }
 }
 

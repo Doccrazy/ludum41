@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import './App.css';
 import logo from './res/logo.txt'
 import lambo from './res/lambo.png'
+import Console from "./Console";
 import Game from "./Game";
+import Log from "./Log";
 
 class App extends Component {
   render() {
@@ -15,7 +18,13 @@ class App extends Component {
           </div>
           <div className="game">
             <div className="background">
-              <Game/>
+              <div className={`gamePre  ${this.props.shaking ? 'shake' : ''}`}>
+                <Game/>
+                <br/>
+                <Console/>
+                <br/>
+                <Log/>
+              </div>
             </div>
           </div>
         </div>
@@ -23,4 +32,6 @@ class App extends Component {
   }
 }
 
-export default App;
+export default connect(state => ({
+  shaking: state.game.shaking
+}))(App);

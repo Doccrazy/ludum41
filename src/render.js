@@ -1,7 +1,8 @@
 import cockpit from './res/cockpit.txt'
 import {escapeHtml} from "./utils";
+import {getPlayer} from "./actions/game";
 
-const COCKPIT_TMPL = escapeHtml(cockpit);
+const COCKPIT_TMPL = cockpit.replace(/^(\r?\n)+/, '').replace(/(\r?\n)+$/, '');
 
 export function processTemplate(template, context) {
   return template.replace(/\${(\w+)(?:\[(\d+)])?\s*(\w+)?}/g, function(match, varName, line, align) {
@@ -26,16 +27,35 @@ export function processTemplate(template, context) {
 const TRACK_0 = 15;
 export function renderTrack(template, gameState) {
   return template.split('\n').map((row, ln) => {
-    const symbol = (ln - gameState.position) % 3 === 0 ? '+' : '|';
-    const actualPos = gameState.position + (TRACK_0 - ln);
+    const symbol = (ln - getPlayer(gameState).position) % 3 === 0 ? '+' : '|';
+    const actualPos = getPlayer(gameState).position + (TRACK_0 - ln);
+    const playerLane = getPlayer(gameState).lane;
     let object = null;
     for (const obj of gameState.objects) {
       if (obj.renderTrack && obj.position === actualPos) {
         object = obj;
       }
     }
-    return row.replace('L', object ? object.renderTrack(0) : symbol).replace('R', object ? object.renderTrack(0) : symbol);
+    const showLeft = playerLane <= 1;
+    const showRight = playerLane >= 1;
+    return row
+      .replace(/</g, showLeft ? '.' : ' ')
+      .replace(/>/g, showRight ? '.' : ' ')
+      .replace('#', showLeft ? (object ? object.renderTrack(0) : symbol) : ' ')
+      .replace('#', showRight ? (object ? object.renderTrack(0) : symbol) : ' ');
   }).join('\n');
+}
+
+function getRearMirrorText(gameState) {
+  const items = [];
+  const playerPos = getPlayer(gameState).position;
+  for (const obj of gameState.objects) {
+    if (obj.renderRear && obj.position < playerPos && obj.position > playerPos - 5) {
+      obj.renderRear(gameState, items);
+    }
+  }
+  items.sort((i1, i2) => (i2.order || 0) - (i1.order || 0));
+  return items.length ? items[0].text : '';
 }
 
 const CONTEXT = { lane0: [], lane1: [], lane2: []};
@@ -44,8 +64,8 @@ export function renderAll(gameState) {
   const context = CONTEXT;
   for (let laneIdx = 0; laneIdx < 3; laneIdx++) {
     const lane = context[`lane${laneIdx}`];
-    for (let i = 0; i < 9; i++) {
-      const actualPos = gameState.position + i;
+    for (let i = 1; i < 10; i++) {
+      const actualPos = getPlayer(gameState).position + i;
       lane[i] = null;
       for (const obj of gameState.objects) {
         if (obj.render && obj.position === actualPos && obj.lane === laneIdx) {
@@ -57,9 +77,10 @@ export function renderAll(gameState) {
       }
     }
   }
-  context.speed = 45;
-  context.rpm = 4500;
-  return renderTrack(processTemplate(COCKPIT_TMPL, context), gameState);
+  context.speed = Math.trunc(getPlayer(gameState).speed * 30);
+  context.rpm = getPlayer(gameState).rpm;
+  context.rearMirror = getRearMirrorText(gameState);
+  return processTemplate(renderTrack(COCKPIT_TMPL, gameState), context);
 }
 
 // const STATE = {
