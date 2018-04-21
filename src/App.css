@@ -1,0 +1,35 @@
+pre {
+  display: inline-block;
+  text-align: left;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+.wrapper {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  display: flex;
+}
+.header pre {
+  margin: auto;
+}
+.header img {
+  margin: 5px;
+}
+
+.background {
+  text-align: center;
+}
+
+.game {
+  background-color: #222;
+  height: 100%;
+  padding: 20px;
+  color: white;
+}
