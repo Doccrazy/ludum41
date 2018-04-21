@@ -33,3 +33,10 @@ html, body, #root {
   padding: 20px;
   color: white;
 }
+
+.gamePre {
+  white-space: pre;
+  font-family: monospace;
+  text-align: left;
+  display: inline-block;
+}
