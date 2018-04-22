@@ -1,9 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import './Log.css';
 
 const Log = ({entries}) => <div>
   {(entries || []).map((l, idx) =>
-    <div key={idx}>{l}</div>).reverse()}
+    <div key={idx} className={`log-${l.style}`}>{l.message}</div>).reverse()}
 </div>;
 
 export default connect(state => ({

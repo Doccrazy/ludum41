@@ -1,5 +1,8 @@
 import cockpit from './res/cockpit.txt'
-import {escapeHtml} from "./utils";
+import wheelLeft from './res/wheelLeft.txt'
+import wheelStraight from './res/wheelStraight.txt'
+import wheelRight from './res/wheelRight.txt'
+import {escapeHtml, setCharAt} from "./utils";
 import {getPlayer} from "./actions/game";
 
 const COCKPIT_TMPL = cockpit.replace(/^(\r?\n)+/, '').replace(/(\r?\n)+$/, '');
@@ -46,6 +49,33 @@ export function renderTrack(template, gameState) {
   }).join('\n');
 }
 
+function renderWheel(template, gameState) {
+  const wheel = getPlayer(gameState).turn < 0 ? wheelLeft : (getPlayer(gameState).turn > 0 ? wheelRight : wheelStraight);
+  const wheelLines = wheel.split(/\r?\n/);
+  let colPos, startRow;
+  return template.split('\n').map((row, ln) => {
+    if (!colPos || colPos < 0) {
+      colPos = row.indexOf('%');
+      if (colPos >= 0) {
+        startRow = ln;
+        row = setCharAt(row, colPos, ' ');
+      }
+    }
+    if (colPos >= 0) {
+      const wheelRow = wheelLines[ln - startRow];
+      if (wheelRow) {
+        const chars = wheelRow.split('');
+        for (let i = 0; i < chars.length; i++) {
+          if (chars[i] !== ' ') {
+            row = setCharAt(row, colPos + i, chars[i]);
+          }
+        }
+      }
+    }
+    return row;
+  }).join('\n');
+}
+
 function getRearMirrorText(gameState) {
   const items = [];
   const playerPos = getPlayer(gameState).position;
@@ -61,11 +91,28 @@ function getRearMirrorText(gameState) {
 const CONTEXT = { lane0: [], lane1: [], lane2: []};
 
 export function renderAll(gameState) {
+  const player = getPlayer(gameState);
+  if (!player) {
+    return;
+  }
   const context = CONTEXT;
+  renderLanes(context, gameState);
+  context.speed = Math.trunc(player.speed * 30);
+  context.rpm = player.rpm;
+  context.rearMirror = getRearMirrorText(gameState);
+
+  let result = renderWheel(COCKPIT_TMPL, gameState);
+  result = renderTrack(result, gameState);
+  result = processTemplate(result, context);
+  return result;
+}
+
+function renderLanes(context, gameState) {
+  const player = getPlayer(gameState);
   for (let laneIdx = 0; laneIdx < 3; laneIdx++) {
     const lane = context[`lane${laneIdx}`];
     for (let i = 1; i < 10; i++) {
-      const actualPos = getPlayer(gameState).position + i;
+      const actualPos = player.position + i;
       lane[i] = null;
       for (const obj of gameState.objects) {
         if (obj.render && obj.position === actualPos && obj.lane === laneIdx) {
@@ -77,19 +124,4 @@ export function renderAll(gameState) {
       }
     }
   }
-  context.speed = Math.trunc(getPlayer(gameState).speed * 30);
-  context.rpm = getPlayer(gameState).rpm;
-  context.rearMirror = getRearMirrorText(gameState);
-  return processTemplate(renderTrack(COCKPIT_TMPL, gameState), context);
 }
-
-// const STATE = {
-//   rearMirror: 'Foobar',
-//   sideLeft: 'Line 1\nLine 2',
-//   sideRight: 'Line 1\nLine 2',
-//   left: ['An ancient grandmother', null, null, null, null, null, 'Opponent 1'],
-//   right: 'A sharp right turn\n\nA puddle',
-//   center: 'A huge tree\nYour mom',
-//   speed: 45,
-//   rpm: 4500
-// };

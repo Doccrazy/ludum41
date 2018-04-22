@@ -4,10 +4,12 @@ import store from "../store";
 import {getRandomInt} from "../utils";
 
 export default class Granny {
+  damage = true;
   position;
   lane = 0;
   sidePos;
   speed;
+  rnd = getRandomInt(2);
 
   constructor(position, left) {
     this.position = position;
@@ -45,7 +47,7 @@ export default class Granny {
 
   renderRear(gameState, items) {
     if (this.dead) {
-      items.push({text: '(bone fragments)', order: -5});
+      items.push({text: `(${this.rnd ? 'bone' : 'walker'} fragments)`, order: -5});
     }
   }
 
@@ -53,7 +55,8 @@ export default class Granny {
     if (this.position - getPlayer(state).position < 10 && !this.initialized) {
       this.init(state);
     }
-    if (this.position - getPlayer(state).position < 3 && this.lane === getPlayer(state).lane && this.initialized && !this.enraged) {
+    if (this.position - getPlayer(state).position < 3 && this.position - getPlayer(state).position > 0
+      && this.lane === getPlayer(state).lane && this.initialized && !this.enraged) {
       this.enrage(state);
     }
     if (this.initialized) {

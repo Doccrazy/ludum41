@@ -1,0 +1,9 @@
+.log-error::before {
+  content: '[!] ';
+  color: red;
+}
+
+.log-warning::before {
+  content: '[!] ';
+  color: #f5c900;
+}

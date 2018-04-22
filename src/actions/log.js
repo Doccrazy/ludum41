@@ -1,9 +1,12 @@
 const ADD = 'log/ADD';
 
-export function writeLog(str) {
+export function writeLog(message, style = 'default') {
   return {
     type: ADD,
-    payload: str
+    payload: {
+      message,
+      style
+    }
   }
 }
 
