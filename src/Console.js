@@ -30,7 +30,7 @@ class Console extends React.Component {
                   value={this.props.input} onChange={ev => this.props.onChange(ev.target.value)}
                   onKeyPress={ev => { if (ev.charCode === 13) { this.props.onExec(); } }}/>
       <div className="help">Available commands:{' '}
-        {this.props.matches.map(cmd => <span>{cmd}</span>)}
+        {this.props.matches.map(cmd => <span key={cmd}>{cmd}</span>)}
       </div>
     </div>;
   }

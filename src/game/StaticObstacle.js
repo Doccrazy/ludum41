@@ -4,13 +4,13 @@ import Player from "./Player";
 import {getPlayer} from "../actions/game";
 
 export default class StaticObstacle {
-  gameOver = true;
-
-  constructor(name, position, lane, tauntMessage) {
+  constructor(name, position, lane, tauntMessage, fatal) {
     this.name = name;
     this.position = position;
     this.lane = lane;
     this.tauntMessage = tauntMessage;
+    this.gameOver = fatal;
+    this.damage = !fatal;
   }
 
   render() {
@@ -31,7 +31,11 @@ export default class StaticObstacle {
 
   hit(other) {
     if (other instanceof Player) {
-      setTimeout(() => store.dispatch(writeLog(`With a splintering thud, your car grinds to a halt against ${this.name}.`)));
+      if (this.gameOver) {
+        setTimeout(() => store.dispatch(writeLog(`With a splintering thud, your car grinds to a halt against ${this.name}.`)));
+      } else {
+        setTimeout(() => store.dispatch(writeLog(`Your car makes its rumbling way over ${this.name}.`)));
+      }
       this.dead = true;
     }
   }

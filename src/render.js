@@ -6,6 +6,7 @@ import {escapeHtml, setCharAt} from "./utils";
 import {getPlayer} from "./actions/game";
 
 const COCKPIT_TMPL = cockpit.replace(/^(\r?\n)+/, '').replace(/(\r?\n)+$/, '');
+const NUM_LANE_ROWS = 10;
 
 export function processTemplate(template, context) {
   return template.replace(/\${(\w+)(?:\[(\d+)])?\s*(\w+)?}/g, function(match, varName, line, align) {
@@ -41,11 +42,18 @@ export function renderTrack(template, gameState) {
     }
     const showLeft = playerLane <= 1;
     const showRight = playerLane >= 1;
-    return row
+    const leftIdx = row.indexOf('#');
+    const rightIdx = row.lastIndexOf('#');
+    row = row
       .replace(/</g, showLeft ? '.' : ' ')
-      .replace(/>/g, showRight ? '.' : ' ')
-      .replace('#', showLeft ? (object ? object.renderTrack(0) : symbol) : ' ')
-      .replace('#', showRight ? (object ? object.renderTrack(0) : symbol) : ' ');
+      .replace(/>/g, showRight ? '.' : ' ');
+    if (object && object.renderRow && ln > 5 && leftIdx >= 0 && rightIdx >= 0) {
+      row = row.substr(0, leftIdx) + object.renderTrack(0).repeat(rightIdx - leftIdx + 1) + row.substr(rightIdx + 1);
+    } else {
+      row = row.replace('#', showLeft ? (object ? object.renderTrack(0) : symbol) : ' ')
+        .replace('#', showRight ? (object ? object.renderTrack(1) : symbol) : ' ');
+    }
+    return row;
   }).join('\n');
 }
 
@@ -111,7 +119,7 @@ function renderLanes(context, gameState) {
   const player = getPlayer(gameState);
   for (let laneIdx = 0; laneIdx < 3; laneIdx++) {
     const lane = context[`lane${laneIdx}`];
-    for (let i = 1; i < 10; i++) {
+    for (let i = 1; i <= NUM_LANE_ROWS; i++) {
       const actualPos = player.position + i;
       lane[i] = null;
       for (const obj of gameState.objects) {

@@ -7,3 +7,8 @@
   content: '[!] ';
   color: #f5c900;
 }
+
+.log-success::before {
+  content: '[V] ';
+  color: green;
+}

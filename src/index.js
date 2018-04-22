@@ -6,6 +6,9 @@ import registerServiceWorker from './registerServiceWorker';
 import { Provider } from 'react-redux'
 import store from "./store";
 import './game/commands'
+import initializeGame from "./store/initializeGame";
+
+initializeGame(store);
 
 ReactDOM.render(<Provider store={store}>
   <App />

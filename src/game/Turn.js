@@ -6,9 +6,10 @@ import Player from "./Player";
 export default class Turn {
   allLanes = true;
 
-  constructor(pos, dir) {
+  constructor(pos, dir, description) {
     this.position = pos;
     this.direction = dir;
+    this.description = description;
   }
 
   renderTrack(side) {
@@ -16,8 +17,9 @@ export default class Turn {
   }
 
   update(state) {
-    if (!this.seenTaunt && this.position - getPlayer(state).position < 6) {
-      setTimeout(() => store.dispatch(writeLog(`A sharp ${this.direction} turn is approaching.`, 'warning')));
+    if (!this.seenTaunt && this.position - getPlayer(state).position < 6 && this.description) {
+      const msg = `A ${this.description.replace('$dir', this.direction)} turn is approaching.`;
+      setTimeout(() => store.dispatch(writeLog(msg, 'warning')));
       this.seenTaunt = true;
     }
   }

@@ -2,11 +2,12 @@ import {shakeScreen, TIME_SCALE} from "../actions/game";
 import store from '../store'
 import {writeLog} from "../actions/log";
 
-export const GEARS = [6000, 3000, 1500, 700];
+export const GEARS = [7000, 3000, 1500, 700];
 const OVERHEAT_SECS = 10;
 const MAX_SPEED = 6.5;
 const OFFTRACK_SPEED = 0.5;
-const ACCEL_SCALE = 0.25;  // i.e. game speed
+const ACCEL_SCALE = 0.25;  // i.e. progression speed
+const SPEED_SCALE = 0.2;  // i.e. max game speed
 const TURN_LANE_DELAY = 4;  // time until you change lane when turned on a straight
 
 export default class Player {
@@ -38,7 +39,7 @@ export default class Player {
       accel = accel * (MAX_SPEED - this.speed) / MAX_SPEED;
     }
     // engine break
-    if (this.rpm > 6100 || this.engineDead) {
+    if (this.rpm > 6100 || this.engineDead || (this.rpm > 5500 && this.accel === 0)) {
       accel = -0.75;
     }
     // off track
@@ -55,7 +56,7 @@ export default class Player {
       this.offTrackWarning = false;
     }
     this.speed = Math.min(MAX_SPEED, Math.max(0, this.speed + TIME_SCALE*ACCEL_SCALE*accel));
-    this.floatPosition = this.floatPosition + TIME_SCALE*this.speed;
+    this.floatPosition = this.floatPosition + TIME_SCALE*SPEED_SCALE*this.speed;
     this.position = Math.trunc(this.floatPosition);
 
     const oldHeat = this.engineHeat;
@@ -65,7 +66,7 @@ export default class Player {
       this.engineHeat = Math.max(0, this.engineHeat - TIME_SCALE*(1/OVERHEAT_SECS));
     }
     if (oldHeat < 0.5 && this.engineHeat > 0.5) {
-      setTimeout(() => store.dispatch(writeLog(`WARNING! Your engine is overheating!`, 'warning')));
+      setTimeout(() => store.dispatch(writeLog(`WARNING! Your engine is overheating! Use 'speed 0' to hold speed.`, 'warning')));
     }
     if (oldHeat < 1 && this.engineHeat >= 1) {
       setTimeout(() => store.dispatch(writeLog(`BOOOOM! Your engine just exploded. Enjoy your day.`)));

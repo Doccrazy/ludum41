@@ -7,6 +7,7 @@ const PLACE = "game/PLACE";
 const SHAKE_START = "game/SHAKE_START";
 const SHAKE_END = "game/SHAKE_END";
 const RADIO = "game/RADIO";
+const RESET = "game/RESET";
 
 export function tick() {
   return {
@@ -38,6 +39,12 @@ export function radio(on) {
   return { type: RADIO, payload: on };
 }
 
+export function resetGame() {
+  return {
+    type: RESET
+  }
+}
+
 export function getPlayer(state) {
   if (state.game) {
     state = state.game;
@@ -45,7 +52,8 @@ export function getPlayer(state) {
   return state.objects[0];
 }
 
-export default function(state = { ticks: 0, time: 0, objects: [], shaking: false, radio: false }, action) {
+const DEFAULT_STATE = { ticks: 0, time: 0, objects: [], shaking: false, radio: false };
+export default function(state = DEFAULT_STATE, action) {
   switch (action.type) {
     case TICK:
       const ticks = state.ticks + 1;
@@ -59,6 +67,8 @@ export default function(state = { ticks: 0, time: 0, objects: [], shaking: false
       return { ...state, shaking: false };
     case RADIO:
       return { ...state, radio: action.payload };
+    case RESET:
+      return DEFAULT_STATE;
     default:
       return state;
   }

@@ -6,7 +6,7 @@ import {getRandomInt} from "../utils";
 export default class Granny {
   damage = true;
   position;
-  lane = 0;
+  lane;
   sidePos;
   speed;
   rnd = getRandomInt(2);
@@ -14,6 +14,7 @@ export default class Granny {
   constructor(position, left) {
     this.position = position;
     this.sidePos = left ? -0.5 : 3.5;
+    this.lane = left ? -1 : 3;
     this.speed = left ? 0.25 : -0.25;
   }
 
