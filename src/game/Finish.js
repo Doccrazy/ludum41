@@ -19,6 +19,7 @@ export default class Finish {
       const player = other;
       this.dead = true;
       setTimeout(() => store.dispatch(writeLog(`CONGRATULATIONS! You made it to the finish line without a nervous breakdown.`, 'success')));
+      setTimeout(() => store.dispatch(writeLog("Enter 'start easy|medium|hard' to start a game at another difficulty.", 'warning')));
       player.accel = -1;
       player.turn = 0;
     }

@@ -1,6 +1,9 @@
 .sign {
   color: red;
 }
+.start {
+  color: grey;
+}
 .finish {
   color: green;
 }

@@ -6,6 +6,7 @@ import lambo from './res/lambo.png'
 import Console from "./Console";
 import Game from "./Game";
 import Log from "./Log";
+import {getPlayer} from "./actions/game";
 
 class App extends Component {
   render() {
@@ -33,5 +34,5 @@ class App extends Component {
 }
 
 export default connect(state => ({
-  shaking: state.game.shaking
+  shaking: state.game.shaking || getPlayer(state).isOffTrack()
 }))(App);

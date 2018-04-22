@@ -9,7 +9,7 @@ const toggleRadio = on => () => {
     return;
   }
   if (on) {
-    store.dispatch(writeLog('The car stereo is now playing a cheerful tune that would have been to expensive to license.'));
+    store.dispatch(writeLog('The car stereo is now playing a cheerful tune that would have been too expensive to license.'));
   } else {
     store.dispatch(writeLog('The silence is almost deafening.'));
   }

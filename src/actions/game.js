@@ -22,7 +22,8 @@ export function place(object) {
   }
 }
 
-export const logStart = () => (dispatch, getState) => {
+export const logStart = (difficulty) => (dispatch, getState) => {
+  dispatch(writeLog(`Starting new game at ${difficulty} difficulty.`));
   dispatch(writeLog(`You are starting on lane ${getPlayer(getState().game).lane + 1} of 3 (from the left).`));
   dispatch(writeLog(`Gear ${getPlayer(getState().game).gear + 1} is waiting for action in the gearbox.`));
   dispatch(writeLog(`You might want to 'speed' up a little to make the race less boring.`));
@@ -32,7 +33,7 @@ export const shakeScreen = () => (dispatch, getState) => {
   dispatch({ type: SHAKE_START });
   setTimeout(() => {
     dispatch({ type: SHAKE_END });
-  }, 2000)
+  }, 1000)
 };
 
 export function radio(on) {

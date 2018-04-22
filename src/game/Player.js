@@ -22,6 +22,10 @@ export default class Player {
   turn = 0;
   turnTimer = 0;
 
+  constructor(lane) {
+    this.lane = lane;
+  }
+
   update(state) {
     this.rpm = Math.trunc(this.speed * GEARS[this.gear]);
     let accel = this.accel;
@@ -49,7 +53,6 @@ export default class Player {
       }
       if (!this.offTrackWarning) {
         setTimeout(() => store.dispatch(writeLog('Your car is making an involuntary trip to the countryside.', 'warning')));
-        setTimeout(() => store.dispatch(shakeScreen()));
       }
       this.offTrackWarning = true;
     } else {
