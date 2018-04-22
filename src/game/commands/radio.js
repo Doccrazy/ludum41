@@ -16,6 +16,6 @@ const toggleRadio = on => () => {
   store.dispatch(radio(on));
 };
 
-const radioCmd = COMMANDS.register('radio', "The radio has absolutely no influence on gameplay, but will to its best to distract you when turned 'on'.");
+const radioCmd = COMMANDS.register('radio', "The radio has absolutely no influence on gameplay, but will do its best to distract you when turned 'on'.");
 radioCmd.register('on', toggleRadio(true));
 radioCmd.register('off', toggleRadio(false));

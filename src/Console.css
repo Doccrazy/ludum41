@@ -5,3 +5,10 @@
   outline: 0 solid transparent;
   width: 100%;
 }
+
+.console .help {
+  color: grey;
+}
+.console .help span ~ span {
+  margin-left: 0.5em;
+}

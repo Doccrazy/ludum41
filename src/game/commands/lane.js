@@ -27,6 +27,6 @@ const switchLane = delta => () => {
   }, SWITCH_DELAY);
 };
 
-const switchCmd = COMMANDS.register('switch', "Please tell me to which lane ('left' or 'right').");
-switchCmd.register('left', switchLane(-1));
-switchCmd.register('right', switchLane(1));
+const laneCmd = COMMANDS.register('lane', "Please tell me to which lane ('left' or 'right').");
+laneCmd.register('left', switchLane(-1));
+laneCmd.register('right', switchLane(1));

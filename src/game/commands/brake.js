@@ -15,4 +15,4 @@ function brake() {
 }
 
 COMMANDS.register('brake', brake);
-COMMANDS.register('break', brake);
+COMMANDS.register('break', brake, { alias: true });

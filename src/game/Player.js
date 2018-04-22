@@ -76,7 +76,7 @@ export default class Player {
     if (this.turn && this.speed > 0) {
       this.turnTimer += TIME_SCALE;
       if (this.turnTimer > TURN_LANE_DELAY * (0.25 + 0.75 * (MAX_SPEED - this.speed)/MAX_SPEED)) {
-        this.moveLane(this.turn, 'The sloppy positioning of the steering wheel landed you $dest.');
+        this.moveLane(this.turn, 'The sloppy positioning of the steering wheel threw you $dest.');
         this.turnTimer = 0;
       }
     } else {

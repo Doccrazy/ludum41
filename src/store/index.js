@@ -6,6 +6,7 @@ import thunk from "redux-thunk";
 import Turn from "../game/Turn";
 import Granny from "../game/Granny";
 import StaticObstacle from "../game/StaticObstacle";
+import Radio from "../game/Radio";
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
@@ -23,5 +24,6 @@ store.dispatch(place(new StaticObstacle("A pothole", 8, 1, 'Your suspension woul
 store.dispatch(place(new Turn(7, 'right')));
 store.dispatch(place(new Turn(8, 'right')));
 store.dispatch(place(new Turn(9, 'right')));
+store.dispatch(place(new Radio()));
 
 export default store;
