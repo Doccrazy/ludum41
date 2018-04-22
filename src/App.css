@@ -1,6 +1,7 @@
 pre {
   display: inline-block;
   text-align: left;
+  margin: 0;
 }
 
 html, body, #root {
@@ -53,4 +54,8 @@ html, body, input {
   20%, 80% { transform: translate3d(3px, -3px, 0); }
   30%, 50%, 70% { transform: translate3d(-6px, -6px, 0); }
   40%, 60% { transform: translate3d(6px, -6px, 0); }
+}
+
+.joyride {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }

@@ -23,8 +23,11 @@ export default class CommandRegistry {
 
     let commandObj = this.commands[cmd];
     if (!commandObj) {
-      const candidates = Object.keys(this.commands).filter(c => c.startsWith(cmd));
-      if (candidates.length > 0 && candidates.reduce((a, b) => this.commands[a].handler === this.commands[b].handler ? a : null)) {
+      let candidates = Object.keys(this.commands).filter(c => c.startsWith(cmd));
+      if (candidates.length > 1) {
+        candidates = candidates.filter(cmd => !this.commands[cmd].alias);
+      }
+      if (candidates.length === 1) {
         commandObj = this.commands[candidates[0]];
       }
     }

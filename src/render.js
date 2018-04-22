@@ -6,7 +6,7 @@ import {escapeHtml, setCharAt} from "./utils";
 import {getPlayer} from "./actions/game";
 
 const COCKPIT_TMPL = cockpit.replace(/^(\r?\n)+/, '').replace(/(\r?\n)+$/, '');
-const NUM_LANE_ROWS = 10;
+const NUM_LANE_ROWS = 11;
 
 export function processTemplate(template, context) {
   return template.replace(/\${(\w+)(?:\[(\d+)])?\s*(\w+)?}/g, function(match, varName, line, align) {
@@ -96,6 +96,18 @@ function getRearMirrorText(gameState) {
   return items.length ? items[0].text : '';
 }
 
+function getSideLaneText(gameState, lane) {
+  const items = [];
+  const playerPos = getPlayer(gameState).position;
+  for (const obj of gameState.objects) {
+    if (obj.renderRear && obj.position <= playerPos && obj.position > playerPos - 3 && obj.lane === lane) {
+      obj.renderRear(gameState, items);
+    }
+  }
+  items.sort((i1, i2) => (i2.order || 0) - (i1.order || 0));
+  return items.length ? items[0].text : '';
+}
+
 const CONTEXT = { lane0: [], lane1: [], lane2: []};
 
 export function renderAll(gameState) {
@@ -108,6 +120,8 @@ export function renderAll(gameState) {
   context.speed = Math.trunc(player.speed * 30);
   context.rpm = player.rpm;
   context.rearMirror = getRearMirrorText(gameState);
+  context.sideLeft = player.lane > 0 ? getSideLaneText(gameState, player.lane - 1) : '(brushwood)';
+  context.sideRight = player.lane < 2 ? getSideLaneText(gameState, player.lane + 1) : '(brushwood)';
 
   let result = renderWheel(COCKPIT_TMPL, gameState);
   result = renderTrack(result, gameState);

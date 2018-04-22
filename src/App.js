@@ -6,6 +6,7 @@ import lambo from './res/lambo.png'
 import Console from "./Console";
 import Game from "./Game";
 import Log from "./Log";
+import Tutorial from "./Tutorial";
 import {getPlayer} from "./actions/game";
 
 class App extends Component {
@@ -28,6 +29,7 @@ class App extends Component {
               </div>
             </div>
           </div>
+          <Tutorial/>
         </div>
     );
   }
