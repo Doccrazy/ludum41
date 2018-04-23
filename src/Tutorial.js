@@ -87,6 +87,7 @@ const STEPS = [
     title: 'Get going',
     text: <div>
       <p>Now, to get into the action, go ahead and type <b>speed up</b> into the console. And try not to hit anything expensive!</p>
+      <p>You can restart the game at any point by typing <b>start</b>.</p>
     </div>,
     selector: '.console input'
   },

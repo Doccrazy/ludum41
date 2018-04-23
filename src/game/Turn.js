@@ -32,7 +32,9 @@ export default class Turn {
       const laneDelta = player.turn - turn;
       player.turnTimer = 0;
       if (laneDelta !== 0) {
-        setTimeout(() => store.dispatch(writeLog(`You hurt the sharp ${this.direction} turn's feelings by ignoring it.`)));
+        if (Math.random() < 0.2) {
+          setTimeout(() => store.dispatch(writeLog(`You hurt the sharp ${this.direction} turn's feelings by ignoring it.`)));
+        }
         player.moveLane(laneDelta, 'With screeching tires, you car slides $dest.');
       }
     }

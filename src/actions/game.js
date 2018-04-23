@@ -7,6 +7,8 @@ const PLACE = "game/PLACE";
 const SHAKE_START = "game/SHAKE_START";
 const SHAKE_END = "game/SHAKE_END";
 const RADIO = "game/RADIO";
+const RAINING = "game/RAINING";
+const WIPERS = "game/WIPERS";
 const RESET = "game/RESET";
 const MARK_START = "game/MARK_START";
 
@@ -41,6 +43,14 @@ export function radio(on) {
   return { type: RADIO, payload: on };
 }
 
+export function raining(on) {
+  return { type: RAINING, payload: on };
+}
+
+export function wipers(on) {
+  return { type: WIPERS, payload: on };
+}
+
 export function resetGame() {
   return {
     type: RESET
@@ -60,7 +70,7 @@ export function getPlayer(state) {
   return state.objects[0];
 }
 
-const DEFAULT_STATE = { ticks: 0, time: 0, objects: [], shaking: false, radio: false };
+const DEFAULT_STATE = { ticks: 0, time: 0, objects: [], shaking: false, radio: false, raining: false, wipers: false };
 export default function(state = DEFAULT_STATE, action) {
   switch (action.type) {
     case TICK:
@@ -75,6 +85,10 @@ export default function(state = DEFAULT_STATE, action) {
       return { ...state, shaking: false };
     case RADIO:
       return { ...state, radio: action.payload };
+    case RAINING:
+      return { ...state, raining: action.payload };
+    case WIPERS:
+      return { ...state, wipers: action.payload };
     case RESET:
       return DEFAULT_STATE;
     case MARK_START:

@@ -7,6 +7,7 @@ import Console from "./Console";
 import Game from "./Game";
 import Log from "./Log";
 import Tutorial from "./Tutorial";
+import Rain from "./Rain";
 import {getPlayer} from "./actions/game";
 
 class App extends Component {
@@ -21,6 +22,7 @@ class App extends Component {
           <div className="game">
             <div className="background">
               <div className={`gamePre  ${this.props.shaking ? 'shake' : ''}`}>
+                <Rain/>
                 <Game/>
                 <br/>
                 <Console/>

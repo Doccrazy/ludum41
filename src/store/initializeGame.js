@@ -5,6 +5,7 @@ import {getRandomInt} from "../utils";
 import {clearLog} from "../actions/log";
 import generateLevel from "./levelGenerator";
 import Opponent from "../game/Opponent";
+import Rain from "../game/Rain";
 
 let interval;
 
@@ -43,6 +44,7 @@ export default function (store, difficulty) {
   const playerLane = getRandomInt(3);
   store.dispatch(place(new Player(playerLane)));
   store.dispatch(place(new Radio()));
+  store.dispatch(place(new Rain()));
   store.dispatch(place(new Opponent('', -1, (playerLane + 1) % 3)));
   // store.dispatch(place(new Opponent(2, -2, 1)));
   // store.dispatch(place(new Opponent(3, -3, 2)));
