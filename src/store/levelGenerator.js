@@ -45,9 +45,9 @@ function placeTurns(store, settings) {
     }
     const d = getRandomInt(2);
     const turn = TURNS[getRandomInt(TURNS.length)];
-    const descr = turn.shift();
+    const descr = turn[0];
     p += turn.length + 1;
-    for (const obj of turn.map((t, idx) => new Turn(p + idx, (t ^ d) ? 'right' : 'left', idx === 0 ? descr : null))) {
+    for (const obj of turn.slice(1).map((t, idx) => new Turn(p + idx, (t ^ d) ? 'right' : 'left', idx === 0 ? descr : null))) {
       store.dispatch(place(obj));
       turnMap[obj.position] = 1;
     }

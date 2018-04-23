@@ -8,6 +8,7 @@ const SHAKE_START = "game/SHAKE_START";
 const SHAKE_END = "game/SHAKE_END";
 const RADIO = "game/RADIO";
 const RESET = "game/RESET";
+const MARK_START = "game/MARK_START";
 
 export function tick() {
   return {
@@ -46,6 +47,12 @@ export function resetGame() {
   }
 }
 
+export function markStart() {
+  return {
+    type: MARK_START
+  }
+}
+
 export function getPlayer(state) {
   if (state.game) {
     state = state.game;
@@ -70,6 +77,8 @@ export default function(state = DEFAULT_STATE, action) {
       return { ...state, radio: action.payload };
     case RESET:
       return DEFAULT_STATE;
+    case MARK_START:
+      return { ...state, startTime: state.time };
     default:
       return state;
   }
@@ -91,8 +100,8 @@ function processTick(state) {
     for (let j = i + 1; j < updateable.length; j++) {
       const obj2 = updateable[j];
       if (obj2.hit && obj1.position === obj2.position && (obj1.lane === obj2.lane || obj1.allLanes || obj2.allLanes)) {
-        obj1.hit(obj2);
-        obj2.hit(obj1);
+        obj1.hit(obj2, state);
+        obj2.hit(obj1, state);
       }
     }
   }

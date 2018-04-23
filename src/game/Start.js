@@ -1,6 +1,7 @@
 import store from "../store";
 import {writeLog} from "../actions/log";
 import Player from "./Player";
+import {markStart} from "../actions/game";
 
 export default class Start {
   allLanes = true;
@@ -19,6 +20,7 @@ export default class Start {
       // const player = other;
       this.dead = true;
       setTimeout(() => store.dispatch(writeLog(`GO! Turning the hourglass now. Try to reach the finish before we run out of sand.`)));
+      setTimeout(() => store.dispatch(markStart()));
       // player.accel = -1;
       // player.turn = 0;
     }

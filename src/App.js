@@ -36,5 +36,5 @@ class App extends Component {
 }
 
 export default connect(state => ({
-  shaking: state.game.shaking || getPlayer(state).isOffTrack()
+  shaking: state.game.shaking || (getPlayer(state).isOffTrack() && getPlayer(state).speed > 0)
 }))(App);

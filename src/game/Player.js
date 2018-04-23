@@ -4,10 +4,10 @@ import {writeLog} from "../actions/log";
 
 export const GEARS = [7000, 3000, 1500, 700];
 const OVERHEAT_SECS = 10;
-const MAX_SPEED = 6.5;
+export const MAX_SPEED = 6.5;
 const OFFTRACK_SPEED = 0.5;
 const ACCEL_SCALE = 0.25;  // i.e. progression speed
-const SPEED_SCALE = 0.2;  // i.e. max game speed
+export const SPEED_SCALE = 0.2;  // i.e. max game speed
 const TURN_LANE_DELAY = 4;  // time until you change lane when turned on a straight
 
 export default class Player {
@@ -28,29 +28,8 @@ export default class Player {
 
   update(state) {
     this.rpm = Math.trunc(this.speed * GEARS[this.gear]);
-    let accel = this.accel;
-    if (accel > 0) {
-      // rpm cutoff
-      if (this.rpm > 6000) {
-        accel = 0;
-      // engine stall
-      } else if (this.rpm < 750) {
-        accel = accel * 0.25;
-      } else if (this.rpm < 1500 || this.rpm > 5000) {
-        accel = accel * 0.5;
-      }
-      // less accel on higher speeds
-      accel = accel * (MAX_SPEED - this.speed) / MAX_SPEED;
-    }
-    // engine break
-    if (this.rpm > 6100 || this.engineDead || (this.rpm > 5500 && this.accel === 0)) {
-      accel = -0.75;
-    }
     // off track
     if (this.isOffTrack()) {
-      if (this.speed > OFFTRACK_SPEED) {
-        accel = -2;
-      }
       if (!this.offTrackWarning) {
         setTimeout(() => store.dispatch(writeLog('Your car is making an involuntary trip to the countryside.', 'warning')));
       }
@@ -58,6 +37,8 @@ export default class Player {
     } else {
       this.offTrackWarning = false;
     }
+
+    const accel = this.realAccel();
     this.speed = Math.min(MAX_SPEED, Math.max(0, this.speed + TIME_SCALE*ACCEL_SCALE*accel));
     this.floatPosition = this.floatPosition + TIME_SCALE*SPEED_SCALE*this.speed;
     this.position = Math.trunc(this.floatPosition);
@@ -72,7 +53,7 @@ export default class Player {
       setTimeout(() => store.dispatch(writeLog(`WARNING! Your engine is overheating! Use 'speed 0' to hold speed.`, 'warning')));
     }
     if (oldHeat < 1 && this.engineHeat >= 1) {
-      setTimeout(() => store.dispatch(writeLog(`BOOOOM! Your engine just exploded. Enjoy your day.`)));
+      setTimeout(() => store.dispatch(writeLog(`BOOOOM! Your engine just exploded. Enjoy your day.`, 'error')));
       setTimeout(() => store.dispatch(shakeScreen()));
       this.engineDead = true;
     }
@@ -86,6 +67,32 @@ export default class Player {
     } else {
       this.turnTimer = 0;
     }
+  }
+
+  realAccel() {
+    let accel = this.accel;
+    if (accel > 0) {
+      // rpm cutoff
+      if (this.rpm > 6000) {
+        accel = 0;
+        // engine stall
+      } else if (this.rpm < 750) {
+        accel = accel * 0.25;
+      } else if (this.rpm < 1500 || this.rpm > 5000) {
+        accel = accel * 0.5;
+      }
+      // less accel on higher speeds
+      accel = accel * (MAX_SPEED - this.speed) / MAX_SPEED;
+    }
+    // engine break
+    if (this.rpm > 6100 || this.engineDead || (this.rpm > 5500 && this.accel === 0)) {
+      accel = -0.75;
+    }
+    // off track
+    if (this.isOffTrack() && this.speed > OFFTRACK_SPEED) {
+      accel = -2;
+    }
+    return accel;
   }
 
   hit(other) {

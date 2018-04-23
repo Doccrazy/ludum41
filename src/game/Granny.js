@@ -2,6 +2,7 @@ import {getPlayer, TIME_SCALE} from "../actions/game";
 import {writeLog} from "../actions/log";
 import store from "../store";
 import {getRandomInt} from "../utils";
+import Player from "./Player";
 
 export default class Granny {
   damage = true;
@@ -67,7 +68,9 @@ export default class Granny {
   }
 
   hit(other) {
-    setTimeout(() => store.dispatch(writeLog(`With a low crunching sound, the old lady vanishes beneath your vehicle.`)));
-    this.dead = true;
+    if (other instanceof Player) {
+      setTimeout(() => store.dispatch(writeLog(`With a low crunching sound, the old lady vanishes beneath your vehicle.`)));
+      this.dead = true;
+    }
   }
 }
