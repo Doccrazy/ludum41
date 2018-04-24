@@ -122,6 +122,7 @@ export function renderAll(gameState) {
   context.rearMirror = getRearMirrorText(gameState);
   context.sideLeft = player.lane > 0 ? getSideLaneText(gameState, player.lane - 1) : '(brushwood)';
   context.sideRight = player.lane < 2 ? getSideLaneText(gameState, player.lane + 1) : '(brushwood)';
+  context.lane = player.isOffTrack() ? `Off track (${player.lane < 0 ? 'left' : 'right'})` : `Lane ${player.lane + 1}`;
 
   let result = renderWheel(COCKPIT_TMPL, gameState);
   result = renderTrack(result, gameState);
