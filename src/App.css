@@ -4,11 +4,12 @@ pre {
   margin: 0;
 }
 
-html, body, #root {
+html, body, #root, .wrapper, .game, .background {
   height: 100%;
 }
 html, body, input {
-  font-family: monospace;
+  font-family: "Lucida Console", Monaco, monospace;
+  font-size: 13px;
 }
 
 .wrapper {
@@ -19,6 +20,7 @@ html, body, input {
 
 .header {
   display: flex;
+  flex-shrink: 0;
 }
 .header pre {
   margin: auto;
@@ -36,12 +38,14 @@ html, body, input {
   height: 100%;
   padding: 20px;
   color: white;
+  overflow-y: hidden;
 }
 
 .gamePre {
   white-space: pre;
   text-align: left;
   display: inline-block;
+  line-height: 15px;
 }
 .gamePre.shake {
   animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;

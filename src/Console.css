@@ -1,9 +1,13 @@
+.console .prompt {
+  display: flex;
+}
+
 .console input {
   color: white;
   border: 0;
   background: none;
   outline: 0 solid transparent;
-  width: 100%;
+  flex-grow: 1;
 }
 
 .console .help {

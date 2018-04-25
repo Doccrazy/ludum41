@@ -15,9 +15,9 @@ class App extends Component {
     return (
         <div className="wrapper">
           <div className="header">
-            <img src={lambo} alt="lambo" />
+            <img src={lambo} alt="lambo" height={80} />
             <pre>{logo}</pre>
-            <img src={lambo} alt="lambo" />
+            <img src={lambo} alt="lambo" height={80} />
           </div>
           <div className="game">
             <div className="background">
